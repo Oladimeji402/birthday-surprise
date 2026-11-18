@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>For Murjanatu 💗</title>
 <!-- link preview card (WhatsApp, iMessage, Instagram, X…) — live at https://birthday-surprise-1811.vercel.app -->
 <meta name="description" content="Someone made something special, just for you. Tap to unlock 🔒">
@@ -30,6 +30,10 @@
   :root{--rose:#c2185b;--pink:#ff6ea1;--ink:#5a1f3d;--cream:#fff8fb}
   *{box-sizing:border-box;margin:0}
   html,body{height:100%}
+  /* no double-tap zoom / text selection / grey tap flash on phones */
+  html,body,button,.gift,.stage3d,#c3d{touch-action:manipulation}
+  button,.gift,.pad,.dots,.stage3d{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  *{-webkit-tap-highlight-color:transparent}
   body{font-family:Georgia,'Times New Roman',serif;color:var(--ink);
     background:radial-gradient(circle at 50% 12%,#fffafc,#ffe0ec 55%,#ffc7dc);overflow-x:hidden}
   .scene{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;
