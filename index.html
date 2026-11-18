@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Murjanatu 💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--rose:#c2185b;--pink:#ff6ea1;--ink:#5a1f3d;--cream:#fff8fb}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{font-family:Georgia,'Times New Roman',serif;color:var(--ink);
+    background:radial-gradient(circle at 50% 12%,#fffafc,#ffe0ec 55%,#ffc7dc);overflow-x:hidden}
+  .scene{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px 16px;gap:16px;animation:fade .9s ease}
+  .scene.on{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  h1{font-size:clamp(2rem,9vw,3.4rem);line-height:1.12;background:linear-gradient(90deg,#b0245f,#ff6ea1);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .script{font-family:'Dancing Script',cursive;font-weight:700}
+  p{font-size:1.1rem;line-height:1.6;max-width:30rem}
+  small{opacity:.75}
+  button{font:inherit;font-size:1.05rem;padding:13px 28px;border-radius:999px;border:0;cursor:pointer;
+    background:linear-gradient(90deg,#ff6ea1,#e8467f);color:#fff;font-weight:bold;box-shadow:0 8px 22px #e8467f55}
+  button:active{transform:scale(.96)}
+  #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
+
+  /* ---- PIN lock ---- */
+  .hearts-top{display:flex;justify-content:center;align-items:center;margin-bottom:-6px}
+  .hf{width:min(40vw,150px);filter:drop-shadow(0 6px 10px #e8467f44)}
+  .hearts-top .hf+.hf{margin-left:-14px}
+  .dots{display:flex;gap:12px}
+  .dot{width:54px;height:54px;border-radius:16px;background:#fff9;border:2px solid #fff;
+    box-shadow:0 4px 12px #e8467f22 inset,0 4px 10px #e8467f22;display:grid;place-items:center;font-size:1.5rem;
+    transition:transform .25s}
+  .dot.fill{transform:scale(1.08)}
+  .pad{display:grid;grid-template-columns:repeat(3,76px);gap:10px}
+  .pad button{background:linear-gradient(#fffafc,#ffe9f1);color:#7a1d48;border:2px solid #fff;font-size:1.35rem;
+    padding:12px 0;border-radius:22px;box-shadow:0 5px 12px #e8467f33;font-weight:600}
+  .pad button.go{background:linear-gradient(#ffb3cf,#ff8fb8);color:#fff}
+  .shake{animation:shake .45s}
+  @keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+  #pinMsg{min-height:1.5em;font-size:1rem;color:#c2185b}
+
+  /* ---- 3D character stage ---- */
+  .bubble{background:#fff;color:#b0245f;border-radius:20px;padding:10px 18px;position:relative;max-width:90vw;
+    display:flex;flex-direction:column;gap:2px;box-shadow:0 10px 30px #e8467f44;animation:pop .6s 1.8s both;z-index:3}
+  .bubble::after{content:"";position:absolute;bottom:-9px;left:50%;margin-left:-9px;border:9px solid transparent;border-top-color:#fff;border-bottom:0}
+  .bubble b{font-size:1.1rem}
+  @keyframes pop{from{opacity:0;transform:scale(.6) translateY(10px)}to{opacity:1;transform:none}}
+  .stage3d{position:relative;width:min(96vw,560px);aspect-ratio:1/1.05;touch-action:pan-y}
+  .stage3d canvas{width:100%;height:100%;display:block}
+  #hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .heart{position:absolute;font-size:1.6rem;animation:rise 3.2s ease-out forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(0) scale(.5)}15%{opacity:1}
+    to{opacity:0;transform:translate(var(--hx,0),-190px) scale(1.3)}}
+  #fallbackRose{display:none;font-size:6rem;background:none;box-shadow:none;padding:0}
+
+  /* ---- gift ---- */
+  .gift{font-size:clamp(7rem,38vw,11rem);cursor:pointer;animation:bob 1.6s ease-in-out infinite;user-select:none}
+  @keyframes bob{50%{transform:translateY(-14px) rotate(-3deg)}}
+  .gift.open{animation:pop2 .7s forwards}
+  @keyframes pop2{to{transform:scale(2.4);opacity:0}}
+  /* ---- slideshow ---- */
+  .frame{width:min(86vw,360px);aspect-ratio:3/4;border-radius:18px;overflow:hidden;background:#fff6;
+    box-shadow:0 14px 40px #e8467f55;border:6px solid #fff;position:relative}
+  .frame img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity 1s}
+  .frame img{object-position:50% 25%}
+  .frame img.show{opacity:1}
+  .caption{min-height:3.2em;font-style:italic;font-size:1.15rem}
+  .reason{background:#fffc;border:1px solid #fff;border-radius:16px;padding:16px 20px;max-width:30rem;width:100%;
+    animation:fade .7s both;box-shadow:0 8px 20px #e8467f22}
+  /* ---- cake ---- */
+  .flame{transform-box:fill-box;transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate;transition:opacity .35s}
+  @keyframes flick{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(.92,1.08) rotate(2deg)}}
+  .glow{transition:opacity .35s}
+  .flame.out,.glow.out{opacity:0}
+  .petal{position:absolute;top:-30px;width:14px;height:18px;background:radial-gradient(#ff9fc4,#e8467f);
+    border-radius:80% 0 80% 0;opacity:.85;animation:fall linear infinite}
+  @keyframes fall{to{transform:translate(var(--dx),110vh) rotate(540deg)}}
+  /* animated "tap here" finger */
+  .tapHint{position:absolute;display:none;pointer-events:none;z-index:4;font-size:2.6rem;line-height:1;
+    animation:tapDo 1.3s ease-in-out infinite;filter:drop-shadow(0 4px 6px #0003)}
+  @keyframes tapDo{0%,100%{transform:translate(-50%,22px)}35%,55%{transform:translate(-50%,4px) scale(.88)}}
+  .tapHint .rip{position:absolute;left:50%;top:-4px;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
+    border:3px solid #ff4f93;animation:rip 1.3s ease-out infinite}
+  @keyframes rip{0%,34%{opacity:0;transform:scale(.3)}40%{opacity:.95}100%{opacity:0;transform:scale(1.7)}}
+  /* animated "blow here" */
+  .cakeWrap{position:relative;width:min(88vw,380px)}
+  .cakeWrap svg{display:block}
+  .blowHint{position:absolute;left:-6%;top:22%;display:flex;align-items:center;gap:4px;pointer-events:none;z-index:2;transition:opacity .5s}
+  .blowHint.hide{opacity:0}
+  .blowHint .face{font-size:2.4rem;animation:puff 1.8s ease-in-out infinite}
+  @keyframes puff{0%,100%{transform:scale(1)}50%{transform:scale(1.2,.92)}}
+  .streaks{display:flex;flex-direction:column;gap:8px}
+  .streaks i{display:block;width:30px;height:4px;border-radius:4px;background:linear-gradient(90deg,#ff7eb6,#ff7eb600);
+    opacity:0;animation:wind 1.8s ease-out infinite}
+  .streaks i:nth-child(2){animation-delay:.25s;width:38px}.streaks i:nth-child(3){animation-delay:.5s}
+  @keyframes wind{0%{opacity:0;transform:translateX(-6px) scaleX(.4)}30%{opacity:1}100%{opacity:0;transform:translateX(54px) scaleX(1.3)}}
+  .blowHint.active .face{animation-duration:.5s}.blowHint.active i{animation-duration:.55s}
+  /* mic permission pre-prompt */
+  .micSheet{position:fixed;inset:0;background:#5a1f3d55;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+    display:none;align-items:flex-end;justify-content:center;z-index:20;padding:16px}
+  .micSheet.on{display:flex;animation:fade .3s}
+  .micCard{background:#fff;border-radius:24px;padding:22px 20px;max-width:380px;width:100%;display:flex;flex-direction:column;
+    gap:12px;align-items:center;text-align:center;animation:pop .4s both;margin-bottom:6vh;box-shadow:0 20px 50px #5a1f3d55}
+  .micIcon{font-size:2.4rem}
+  .fakeDialog{position:relative;width:100%;background:#f2f2f7;border-radius:14px;padding:14px 12px 0;
+    font-family:-apple-system,system-ui,sans-serif;font-size:.88rem;color:#222;margin-bottom:26px}
+  .fdBtns{display:flex;border-top:1px solid #d6d6db;margin-top:12px}
+  .fdBtns span{flex:1;padding:10px 0;color:#0a63d6}
+  .fdBtns span+span{border-left:1px solid #d6d6db}
+  .fdBtns .allow{font-weight:700;border-radius:0 0 14px 0;animation:glowA 1.3s infinite}
+  @keyframes glowA{50%{background:#ffd3e3}}
+  .smoke{opacity:0;fill:#999}
+  .smoke.go{animation:smoke 1.6s ease-out forwards}
+  @keyframes smoke{0%{opacity:.7;transform:translateY(0) scale(.6)}100%{opacity:0;transform:translateY(-50px) scale(2)}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+
+<!-- shared rose symbol (cake) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="rose" viewBox="0 0 40 40">
+    <ellipse cx="7" cy="27" rx="8" ry="4" fill="#3fa968" transform="rotate(-25 7 27)"/>
+    <ellipse cx="33" cy="27" rx="8" ry="4" fill="#2f8f55" transform="rotate(25 33 27)"/>
+    <circle cx="20" cy="19" r="14" fill="#e8467f"/>
+    <circle cx="20" cy="19" r="11" fill="#ff6ea1"/>
+    <circle cx="20" cy="19" r="7.5" fill="#ff93b9"/>
+    <path d="M20 19c0-3 4-3 4 0s-5 5-8 1 2-9 8-8" stroke="#c2185b" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <circle cx="20" cy="19" r="2" fill="#ffc2d8"/>
+  </symbol>
+</svg>
+
+<!-- PIN lock -->
+<section class="scene on" id="sPin">
+  <div class="hearts-top" id="heartsTop"></div>
+  <h1 class="script">Enter our secret code 💗</h1>
+  <small id="pinHint">Hint: your birthday, as DD/MM 🎂</small>
+  <div class="dots" id="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  <div id="pinMsg"></div>
+  <div class="pad" id="pad"></div>
+</section>
+
+<!-- 0. 3D kneeling character with roses -->
+<section class="scene" id="s0">
+  <div class="bubble" id="bubble"><b id="bubbleTxt"></b><small>👆 tap the roses</small></div>
+  <div class="stage3d" id="stage3d">
+    <canvas id="c3d"></canvas>
+    <div id="hearts"></div>
+    <div class="tapHint" id="tapHint"><span class="rip"></span>👆</div>
+  </div>
+  <button id="fallbackRose">🌹</button>
+</section>
+
+<!-- 1. gift -->
+<section class="scene" id="s1">
+  <small>and one more thing…</small>
+  <div style="position:relative">
+    <div class="gift" id="gift">🎁</div>
+    <div class="tapHint" style="display:block;left:62%;top:58%"><span class="rip"></span>👆</div>
+  </div>
+  <p>Tap the gift</p>
+</section>
+
+<!-- 2. name -->
+<section class="scene" id="s2">
+  <h1 id="title"></h1>
+  <p id="sub"></p>
+  <button id="b2">Keep going ✨</button>
+</section>
+
+<!-- 3. photos -->
+<section class="scene" id="s3">
+  <div class="frame" id="frame"></div>
+  <p class="caption" id="cap"></p>
+  <button id="b3">Next 💫</button>
+</section>
+
+<!-- 4. reasons -->
+<section class="scene" id="s4">
+  <h1 id="reasonsTitle"></h1>
+  <div id="reasons" style="display:grid;gap:12px;width:100%;justify-items:center"></div>
+  <button id="b4">Make a wish 🎂</button>
+</section>
+
+<!-- 5. cake -->
+<section class="scene" id="s_cake">
+  <h1 id="cakeTitle">Make a wish… 💖</h1>
+  <div class="cakeWrap">
+  <div class="blowHint" id="blowHint"><span class="face">😮</span><div class="streaks"><i></i><i></i><i></i></div></div>
+  <svg id="cake" viewBox="0 0 300 300" width="100%" aria-label="Birthday cake">
+    <defs>
+      <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9ec7"/><stop offset="1" stop-color="#e0568f"/></linearGradient>
+      <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3a3"/><stop offset="1" stop-color="#e7b45a"/></linearGradient>
+      <radialGradient id="gF" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#fff6c8"/><stop offset=".5" stop-color="#ffc94d"/><stop offset="1" stop-color="#ff7a1a"/></radialGradient>
+    </defs>
+    <ellipse cx="150" cy="276" rx="130" ry="14" fill="#e8467f33"/>
+    <ellipse cx="150" cy="268" rx="125" ry="14" fill="#fff"/>
+    <rect x="45" y="200" width="210" height="66" rx="12" fill="url(#gB)"/>
+    <path d="M45 212c14 14 26 14 40 0s26 14 40 0 26 14 40 0 26 14 40 0 26 14 45 0v-12H45z" fill="#fff"/>
+    <rect x="80" y="145" width="140" height="58" rx="12" fill="url(#gA)"/>
+    <path d="M80 156c12 12 22 12 35 0s22 12 35 0 22 12 35 0 22 12 35 0v-11H80z" fill="#fff"/>
+    <circle cx="105" cy="182" r="4" fill="#ffd27a"/><circle cx="150" cy="188" r="4" fill="#ffd27a"/><circle cx="195" cy="182" r="4" fill="#ffd27a"/>
+    <g id="candles"></g>
+    <use href="#rose" x="58" y="124" width="34" height="34"/>
+    <use href="#rose" x="208" y="124" width="34" height="34"/>
+    <use href="#rose" x="52" y="196" width="30" height="30"/>
+    <use href="#rose" x="92" y="204" width="28" height="28"/>
+    <use href="#rose" x="136" y="208" width="28" height="28"/>
+    <use href="#rose" x="180" y="204" width="28" height="28"/>
+    <use href="#rose" x="218" y="196" width="30" height="30"/>
+    <use href="#rose" x="14" y="246" width="38" height="38"/>
+    <use href="#rose" x="248" y="246" width="38" height="38"/>
+  </svg>
+  </div>
+  <div id="petals" style="position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1"></div>
+  <p id="cakeHint">Close your eyes, make a wish… then blow out the candles 💨</p>
+  <button id="micBtn">✨ I made my wish</button>
+  <!-- friendly pre-prompt before the phone's own mic dialog -->
+  <div class="micSheet" id="micSheet">
+    <div class="micCard">
+      <div class="micIcon">🎤</div>
+      <b style="font-size:1.2rem">One tiny thing…</b>
+      <p style="font-size:1rem">Your phone will ask to use the microphone, so the candles can feel your breath. Tap <b>Allow</b> 💗</p>
+      <div class="fakeDialog">
+        <div id="fdTitle">“This page” would like to access the microphone</div>
+        <div class="fdBtns"><span id="fdNo">Don't Allow</span><span class="allow" id="fdYes">Allow</span></div>
+        <div class="tapHint" style="display:block;left:75%;top:66%"><span class="rip"></span>👆</div>
+      </div>
+      <button id="micGo">Okay 💗</button>
+    </div>
+  </div>
+  <button id="bCake" style="display:none">One last thing 💌</button>
+</section>
+
+<!-- 6. message -->
+<section class="scene" id="s5">
+  <h1 id="fin"></h1>
+  <p id="msg"></p>
+  <p style="color:var(--rose);font-weight:bold" id="from"></p>
+  <button id="again">Celebrate again 🎉</button>
+</section>
+
+<audio id="music" loop></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script>
+/* ============ EDIT THIS PART ============ */
+const NAME = "Murjanatu";
+const CONFIG = {
+  name: NAME,
+  from: "— With all my love 💗",         // put your own name here, e.g. "— Sulaimon 💗"
+  pin: "1811",                           // her birthday as 4 digits: day + month (DDMM) = 18/11
+  pinHint: "Hint: your birthday, as DD/MM 🎂",
+  headline: "Happy Birthday",
+  sub: "It's not a normal day. It's yours.",
+  // Photos: put image files in the same folder and list them here, with an optional caption.
+  photos: [
+    {src:"photo1.jpg", caption:"Murjanatu, effortlessly beautiful 💗", focus:[-66,-16,175]},
+    // {src:"photo2.jpg", caption:"Pure joy"},   // add more here (focus = [x, y, width] of the heart crop)
+  ],
+  reasonsTitle: `Why today is all about you, ${NAME}`,
+  reasons: [
+    `${NAME}, you are breathtakingly beautiful, and today the whole world should know it.`,
+    `Your smile could light up the darkest room.`,
+    `Every photo of you looks like a masterpiece, and the real you is even better.`,
+    `Beauty like yours doesn't need a filter, only a day like today to be celebrated. 💗`,
+  ],
+  candles: 5,
+  finalTitle: `You deserve every good thing, ${NAME}`,
+  message: `${NAME}, you said you wanted a surprise that makes a normal day feel like your birthday. ` +
+           `I hope this did. Wishing you joy, peace and everything you dream of.`,
+  music: ""  // optional: "song.mp3" in the same folder
+};
+/* ====================================== */
+
+const $=id=>document.getElementById(id);
+const scenes=[...document.querySelectorAll('.scene')];
+function go(id){
+  scenes.forEach(s=>s.classList.toggle('on',s.id===id));window.scrollTo(0,0);
+  if(id==='s0')startStage();
+}
+
+/* confetti */
+const cv=$('fx'),cx=cv.getContext('2d');let bits=[];
+function size(){cv.width=innerWidth;cv.height=innerHeight}size();addEventListener('resize',size);
+const PINK=['#ff6ea1','#ff93b9','#e8467f','#ffc2d8','#ffb703'];
+function burst(n=160,palette){
+  const cols=palette||['#ff6ea1','#ffb703','#8be9fd','#b794f6','#ff3d81'];
+  for(let i=0;i<n;i++)bits.push({x:innerWidth/2,y:innerHeight/2.4,vx:(Math.random()-.5)*16,
+    vy:Math.random()*-14-3,g:.28,s:Math.random()*8+4,c:cols[i%cols.length],r:Math.random()*6,vr:(Math.random()-.5)*.4,l:240});
+}
+(function loop(){cx.clearRect(0,0,cv.width,cv.height);
+  bits=bits.filter(b=>b.l-->0);
+  bits.forEach(b=>{b.vy+=b.g;b.x+=b.vx;b.y+=b.vy;b.r+=b.vr;cx.save();cx.translate(b.x,b.y);cx.rotate(b.r);
+    cx.globalAlpha=Math.min(1,b.l/60);cx.fillStyle=b.c;cx.fillRect(-b.s/2,-b.s/4,b.s,b.s/2);cx.restore()});
+  requestAnimationFrame(loop)})();
+
+/* ---------- fill content ---------- */
+$('title').innerHTML=`${CONFIG.headline},<br>${CONFIG.name}! 🎂`;
+$('sub').textContent=CONFIG.sub;
+$('fin').textContent=CONFIG.finalTitle;
+$('msg').textContent=CONFIG.message;
+$('from').textContent=CONFIG.from;
+$('reasonsTitle').textContent=CONFIG.reasonsTitle;
+$('bubbleTxt').textContent=`For you, ${CONFIG.name} 🌹`;
+$('pinHint').textContent=CONFIG.pinHint;
+
+/* ---------- PIN lock (her special date) ---------- */
+function heartFrame(photo,rot,id){
+  const src=photo&&photo.src,f=(photo&&photo.focus)||[-12,-8,124];
+  const d='M50 88C-20 40 18 -8 50 22C82 -8 120 40 50 88Z';
+  return `<svg viewBox="-8 -6 116 100" class="hf" style="transform:rotate(${rot}deg)"><defs><clipPath id="hc${id}"><path d="${d}"/></clipPath>
+    <linearGradient id="hg${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd3e3"/><stop offset="1" stop-color="#ff9fc4"/></linearGradient></defs>
+    <path d="${d}" fill="#fff" stroke="#f3a6c4" stroke-width="5" stroke-dasharray="1 6" stroke-linecap="round" transform="translate(50 45) scale(1.1) translate(-50 -45)"/>
+    ${src?`<image href="${src}" x="${f[0]}" y="${f[1]}" width="${f[2]}" height="${f[2]*4/3}" preserveAspectRatio="xMidYMid slice" clip-path="url(#hc${id})"/>`
+         :`<path d="${d}" fill="url(#hg${id})"/><text x="50" y="58" font-size="30" text-anchor="middle">💗</text>`}
+    <path d="${d}" fill="none" stroke="#fff" stroke-width="2.5" opacity=".9"/></svg>`;
+}
+$('heartsTop').innerHTML=heartFrame(CONFIG.photos[0],-6,1)+heartFrame(CONFIG.photos[1],6,2);
+let entered='',tries=0;
+const pad=$('pad');
+['1','2','3','4','5','6','7','8','9','⌫','0','♥'].forEach(k=>{
+  const b=document.createElement('button');b.textContent=k;if(k==='♥')b.className='go';
+  b.onclick=()=>key(k);pad.appendChild(b)});
+addEventListener('keydown',e=>{if(!$('sPin').classList.contains('on'))return;
+  if(/^[0-9]$/.test(e.key))key(e.key);else if(e.key==='Backspace')key('⌫');else if(e.key==='Enter')key('♥')});
+function drawDots(){[...$('dots').children].forEach((d,i)=>{
+  d.textContent=i<entered.length?'❤️':'';d.classList.toggle('fill',i<entered.length)})}
+function key(k){
+  if(k==='⌫'){entered=entered.slice(0,-1)}
+  else if(k==='♥'){if(entered.length===4)check();return}
+  else if(entered.length<4){entered+=k}
+  $('pinMsg').textContent='';drawDots();
+  if(entered.length===4)setTimeout(check,250);
+}
+function check(){
+  if(entered===CONFIG.pin){
+    $('pinMsg').textContent='Unlocked 💖';burst(200,PINK);
+    if(CONFIG.music){const a=$('music');a.src=CONFIG.music;a.play().catch(()=>{})}
+    setTimeout(()=>go('s0'),900);
+  }else{
+    tries++;entered='';drawDots();
+    $('dots').classList.remove('shake');void $('dots').offsetWidth;$('dots').classList.add('shake');
+    $('pinMsg').textContent=tries>=2?CONFIG.pinHint:'Not quite… try again 💭';
+  }
+}
+if(!CONFIG.pin)setTimeout(()=>go('s0'),0);
+
+/* ---------- gift ---------- */
+$('gift').onclick=()=>{
+  $('gift').classList.add('open');burst(220);
+  setTimeout(()=>{go('s2');burst(120)},750);
+};
+$('b2').onclick=()=>CONFIG.photos.length?(go('s3'),startShow()):(go('s4'),showReasons());
+
+/* ---------- slideshow ---------- */
+let idx=0,timer;
+function startShow(){
+  const f=$('frame');f.innerHTML='';
+  CONFIG.photos.forEach((p,i)=>{const im=new Image();im.src=p.src;if(i===0)im.className='show';f.appendChild(im)});
+  idx=0;caption();clearInterval(timer);
+  timer=setInterval(()=>step(),3200);
+}
+function caption(){$('cap').textContent=CONFIG.photos[idx].caption||''}
+function step(){const ims=$('frame').children;ims[idx].classList.remove('show');
+  idx=(idx+1)%ims.length;ims[idx].classList.add('show');caption()}
+$('b3').onclick=()=>{clearInterval(timer);go('s4');showReasons()};
+
+/* ---------- reasons ---------- */
+function showReasons(){
+  const box=$('reasons');box.innerHTML='';
+  CONFIG.reasons.forEach((r,i)=>{const d=document.createElement('div');d.className='reason';
+    d.style.animationDelay=(i*1.1)+'s';d.textContent='💛 '+r;box.appendChild(d)});
+}
+$('b4').onclick=()=>{go('s_cake');buildCake()};
+$('bCake').onclick=()=>{go('s5');burst(260)};
+$('again').onclick=()=>{burst(300);setTimeout(()=>burst(200),400)};
+
+/* ---------- cake + microphone blow detection ---------- */
+const NS='http://www.w3.org/2000/svg';
+let candles=[],lit=0,ctx2,analyser,stream,raf,power=0,base=0.02,calib=[],micOn=false;
+function buildCake(){
+  const g=$('candles');g.innerHTML='';candles=[];
+  const n=CONFIG.candles||5, xs=[...Array(n)].map((_,i)=>n===1?150:100+i*(100/(n-1)));
+  const cols=['#7ee0ff','#ffd27a','#b8f58b','#ff9ec7','#c9a7ff'];
+  xs.forEach((x,i)=>{
+    const c=document.createElementNS(NS,'g');
+    c.innerHTML=`<rect x="${x-4}" y="112" width="8" height="36" rx="2" fill="${cols[i%5]}"/>
+      <rect x="${x-4}" y="120" width="8" height="4" fill="#fff6" />
+      <line x1="${x}" y1="112" x2="${x}" y2="104" stroke="#444" stroke-width="1.5"/>
+      <circle class="glow" cx="${x}" cy="96" r="16" fill="#ffc94d" opacity=".3"/>
+      <ellipse class="flame" cx="${x}" cy="96" rx="5" ry="9" fill="url(#gF)"/>
+      <circle class="smoke" cx="${x}" cy="96" r="5"/>`;
+    g.appendChild(c);
+    candles.push({el:c,x,out:false,flame:c.querySelector('.flame'),glow:c.querySelector('.glow'),smoke:c.querySelector('.smoke')});
+  });
+  lit=n;power=0;$('bCake').style.display='none';$('blowHint').classList.remove('hide','active');checkMic();$('cakeTitle').textContent='Make a wish… 💖';
+  $('micBtn').style.display='inline-block';$('micBtn').textContent='✨ I made my wish';
+  $('cakeHint').textContent='Close your eyes, make a wish… then blow out the candles 💨';
+}
+function extinguish(c){
+  if(c.out)return;c.out=true;lit--;
+  c.flame.classList.add('out');c.glow.classList.add('out');
+  c.smoke.classList.add('go');
+  if(lit===0)allOut();
+}
+function allOut(){
+  stopMic();
+  $('cakeTitle').textContent='Your wish is on its way ✨';
+  $('cakeHint').textContent='Happy Birthday, '+CONFIG.name+'! 🎉';
+  burst(300);setTimeout(()=>burst(200),500);
+  $('micBtn').style.display='none';$('blowHint').classList.add('hide');
+  $('bCake').style.display='inline-block';
+}
+function lean(level){
+  candles.forEach(c=>{if(!c.out){const k=Math.min(1,level*6);
+    c.flame.style.transform=`rotate(${k*35}deg) scaleY(${1-k*.35})`;c.flame.style.animation=k>.1?'none':''}});
+}
+/* ---- phone-friendly mic permission (iPhone Safari + Android Chrome) ---- */
+const UA=navigator.userAgent;
+const IS_IOS=!/Android/i.test(UA)&&(/iPhone|iPad|iPod/.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1));
+const IN_APP=/Instagram|FBAN|FBAV|TikTok|musical_ly|Snapchat|Line\//i.test(UA);
+let micOK=false,sheetSeen=false;
+if(!IS_IOS){$('fdTitle').textContent='Use your microphone?';$('fdNo').textContent='Block';}
+function checkMic(){ // already allowed before? then skip the explainer
+  try{navigator.permissions.query({name:'microphone'}).then(p=>{micOK=p.state==='granted'}).catch(()=>{})}catch(e){}
+}
+function showMicHelp(kind){
+  let msg;
+  if(kind==='unsupported'||IN_APP)
+    msg=IS_IOS?'This app’s browser can’t hear the candles. Tap ••• or the share icon, choose “Open in Safari”, then come back to the cake 💗'
+              :'This app’s browser can’t hear the candles. Tap ⋮ and choose “Open in Chrome”, then come back to the cake 💗';
+  else if(kind==='denied')
+    msg=IS_IOS?'The mic was blocked. Tap “aA” in the address bar → Website Settings → Microphone → Allow, then tap Try again 💗'
+              :'The mic was blocked. Tap the icon left of the address bar → Permissions → Microphone → Allow, then tap Try again 💗';
+  else msg='The mic didn’t start. Close any app using it (calls, voice notes) and tap Try again 💗';
+  $('cakeHint').textContent=msg;
+  $('micBtn').style.display='inline-block';$('micBtn').textContent='💗 Try again';
+}
+async function startMic(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showMicHelp('unsupported');return}
+  // iPhone: the audio engine must be created inside the tap, before any await
+  const AC=window.AudioContext||window.webkitAudioContext;
+  try{if(!ctx2||ctx2.state==='closed')ctx2=new AC();ctx2.resume&&ctx2.resume()}catch(e){}
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  }catch(e){
+    showMicHelp(e&&(e.name==='NotAllowedError'||e.name==='SecurityError')?'denied':'other');return;
+  }
+  micOK=true;
+  try{await ctx2.resume()}catch(e){}
+  const src=ctx2.createMediaStreamSource(stream);
+  analyser=ctx2.createAnalyser();analyser.fftSize=1024;src.connect(analyser);
+  const buf=new Uint8Array(analyser.fftSize);micOn=true;calib=[];power=0;
+  $('micBtn').style.display='none';
+  $('cakeHint').textContent=`Now blow, ${CONFIG.name} 💨`;
+  let last=performance.now();
+  (function tick(){
+    if(!micOn)return;raf=requestAnimationFrame(tick);
+    const now=performance.now(),dt=(now-last)/1000;last=now;
+    analyser.getByteTimeDomainData(buf);
+    let s=0;for(let i=0;i<buf.length;i++){const v=(buf[i]-128)/128;s+=v*v}
+    const rms=Math.sqrt(s/buf.length);
+    if(calib.length<30){calib.push(rms);base=calib.reduce((a,b)=>a+b,0)/calib.length;return}
+    const thr=Math.max(0.045,base*2.6);
+    $('blowHint').classList.toggle('active',rms>thr);
+    if(rms>thr){power+=dt;lean(rms)}else{power=Math.max(0,power-dt*1.5);lean(0)}
+    // one good puff blows out ALL the candles in a quick ripple
+    if(power>0.25&&lit>0){
+      candles.filter(c=>!c.out).forEach((c,i)=>setTimeout(()=>extinguish(c),i*90));
+      power=0;micOn=false;
+    }
+  })();
+}
+function stopMic(){micOn=false;cancelAnimationFrame(raf);
+  try{stream&&stream.getTracks().forEach(t=>t.stop());ctx2&&ctx2.close()}catch(e){}}
+$('micBtn').onclick=()=>{
+  if(micOK||sheetSeen)startMic();                    // already allowed, or a retry: ask straight away
+  else{$('micSheet').classList.add('on');}
+};
+$('micGo').onclick=()=>{sheetSeen=true;$('micSheet').classList.remove('on');startMic()};
+
+(function(){const box=$('petals');
+  for(let i=0;i<16;i++){const p=document.createElement('span');p.className='petal';
+    p.style.left=Math.random()*100+'%';p.style.setProperty('--dx',(Math.random()*120-60)+'px');
+    p.style.animationDuration=(7+Math.random()*7)+'s';p.style.animationDelay=(-Math.random()*12)+'s';
+    p.style.transform='scale('+(.7+Math.random()*.8)+')';box.appendChild(p)}})();
+
+/* ================= 3D kneeling character (three.js) ================= */
+let px=0,py=0,bloomed=false,stageStarted=false,bloomT=0;
+addEventListener('pointermove',e=>{px=(e.clientX/innerWidth-.5)*2;py=(e.clientY/innerHeight-.5)*2});
+addEventListener('deviceorientation',e=>{if(e.gamma!=null&&e.beta!=null){
+  px=Math.max(-1,Math.min(1,e.gamma/25));py=Math.max(-1,Math.min(1,(e.beta-50)/25))}});
+
+function heart(e){const h=document.createElement('span');h.className='heart';h.textContent=e||'💖';
+  h.style.left=(30+Math.random()*40)+'%';h.style.top='30%';h.style.setProperty('--hx',(Math.random()*80-40)+'px');
+  $('hearts').appendChild(h);setTimeout(()=>h.remove(),3300)}
+setInterval(()=>{if(!bloomed&&$('s0').classList.contains('on'))heart(Math.random()<.5?'💖':'🌹')},1300);
+function bloom(){
+  if(bloomed)return;bloomed=true;bloomT=performance.now();
+  burst(240,PINK);
+  $('bubbleTxt').textContent=`Happy Birthday, ${CONFIG.name}! 🎂`;
+  $('bubble').querySelector('small').textContent='✨ these are all yours ✨';
+  for(let i=0;i<14;i++)setTimeout(()=>heart(i%2?'🌹':'💖'),i*130);
+  setTimeout(()=>burst(180,PINK),800);
+  setTimeout(()=>go('s1'),3300);
+}
+$('fallbackRose').onclick=bloom;
+
+function startStage(){
+  if(stageStarted)return;stageStarted=true;
+  if(!window.THREE){$('fallbackRose').style.display='block';return}
+  const T=THREE;
+  const host=$('stage3d'),cvs=$('c3d');
+  const R=new T.WebGLRenderer({canvas:cvs,antialias:true,alpha:true});
+  R.outputEncoding=T.sRGBEncoding;R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;
+  R.setPixelRatio(Math.min(2,devicePixelRatio||1));
+  const scene=new T.Scene();
+  const cam=new T.PerspectiveCamera(34,1,.1,50);
+  function resize(){const w=host.clientWidth,h=host.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+  resize();addEventListener('resize',resize);
+
+  /* lights */
+  scene.add(new T.HemisphereLight(0xfff4f9,0xd88aa8,.45));
+  const key=new T.DirectionalLight(0xfff1e6,.85);key.position.set(2.5,4.5,3.5);key.castShadow=true;
+  key.shadow.mapSize.set(1024,1024);const sc=key.shadow.camera;sc.left=-2.5;sc.right=2.5;sc.top=2.5;sc.bottom=-2.5;sc.near=1;sc.far=14;
+  key.shadow.bias=-.0004;scene.add(key);
+  const rim=new T.DirectionalLight(0xff8fbf,.55);rim.position.set(-3,2.5,-3);scene.add(rim);
+
+  const M=(c,r=.55,m=0)=>new T.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+  const skin=M(0xf0b08c,.62),hairM=M(0x24150f,.4),jacketM=M(0x2f3b82,.7),pantsM=M(0x232d63,.8),
+        shirtM=M(0xffffff,.8),shoeM=M(0x1b1320,.25,.1),tieM=M(0xff5c9a,.5);
+  const ball=(r,mat)=>{const m=new T.Mesh(new T.SphereGeometry(r,28,18),mat);m.castShadow=true;return m};
+  const seg=(r,mat)=>{const m=new T.Mesh(new T.CylinderGeometry(r,r,1,20),mat);m.castShadow=true;return m};
+  const UP=new T.Vector3(0,1,0);
+  const place=(m,a,b)=>{const d=b.clone().sub(a),L=d.length();m.position.copy(a).add(b).multiplyScalar(.5);
+    m.scale.set(1,L,1);m.quaternion.setFromUnitVectors(UP,d.normalize())};
+  const V=(x,y,z)=>new T.Vector3(x,y,z);
+
+  /* rose carpet */
+  const rug=new T.Mesh(new T.CircleGeometry(1.0,64),M(0xf59abb,1));rug.rotation.x=-Math.PI/2;rug.receiveShadow=true;scene.add(rug);
+  const rug2=new T.Mesh(new T.RingGeometry(.92,1.0,64),M(0xe87aa3,1));rug2.rotation.x=-Math.PI/2;rug2.position.y=.002;scene.add(rug2);
+  const petalM=M(0xff7fae,.7);
+  for(let i=0;i<26;i++){const p=ball(.05,petalM);p.scale.set(1,.25,.65);p.castShadow=false;
+    const a=Math.random()*6.28,r=Math.random()*.85;p.position.set(Math.cos(a)*r,.01,Math.sin(a)*r);p.rotation.y=Math.random()*6;scene.add(p)}
+
+  /* figure */
+  /* realistic proportions (~7 heads tall), tailored suit, natural face */
+  const SKIN=0x9a6444;                                   // skin tone — change if you like
+  const skinM=M(SKIN,.55),lipM=M(0x86493f,.45),hairR=M(0x14100e,.85),
+        suitM=M(0x262c3d,.75),suitDark=M(0x1b2030,.8),whiteM=M(0xf4f2ef,.7),silkM=M(0xc9607e,.35,.05),soleM=M(0x0f0d0c,.35,.15);
+  const seg2=(ra,rb,mat)=>{const m=new T.Mesh(new T.CylinderGeometry(rb,ra,1,24),mat);m.castShadow=true;return m};
+  const orient=(g,from,to)=>{g.position.copy(to);g.quaternion.setFromUnitVectors(UP,to.clone().sub(from).normalize())};
+  function hand(){const g=new T.Group();
+    const palm=ball(.04,skinM);palm.scale.set(1,1.35,.6);palm.position.y=.045;g.add(palm);
+    const fingers=ball(.034,skinM);fingers.scale.set(1,1.1,.55);fingers.position.set(0,.09,.008);fingers.rotation.x=.35;g.add(fingers);
+    const th=ball(.015,skinM);th.scale.set(1,2.2,1);th.position.set(.034,.045,.016);th.rotation.z=-.5;g.add(th);
+    const cuff=seg2(.04,.04,whiteM);cuff.scale.y=.022;cuff.position.y=-.004;g.add(cuff);
+    return g}
+
+  const fig=new T.Group();fig.rotation.y=-.35;scene.add(fig);
+  /* torso: a shaped jacket (wider shoulders, narrow waist) */
+  const prof=[[0,0],[.165,0],[.158,.08],[.165,.22],[.19,.38],[.205,.47],[.19,.52],[.12,.56],[.05,.58],[0,.58]].map(([r,y])=>new T.Vector2(r,y));
+  const torso=new T.Mesh(new T.LatheGeometry(prof,48),suitM);
+  torso.scale.set(1.08,1,.66);torso.position.set(0,.6,0);torso.rotation.x=.08;torso.castShadow=true;fig.add(torso);
+  const shirt=ball(.07,whiteM);shirt.scale.set(.75,1.8,.35);shirt.position.set(0,1.04,.152);fig.add(shirt);
+  [-1,1].forEach(s=>{const l=new T.Mesh(new T.BoxGeometry(.022,.17,.012),suitDark);l.position.set(s*.045,1.02,.163);l.rotation.set(.08,0,s*.35);fig.add(l)});
+  const tie=new T.Mesh(new T.BoxGeometry(.03,.19,.012),silkM);tie.position.set(0,.99,.17);tie.rotation.x=.08;fig.add(tie);
+  const knot=ball(.017,silkM);knot.position.set(0,1.1,.162);fig.add(knot);
+  [-1,1].forEach(s=>{const b=ball(.009,suitDark);b.position.set(-.01,.86+s*.05,.16);fig.add(b)});
+  const pelvis=ball(.15,suitM);pelvis.scale.set(1.15,.65,.85);pelvis.position.set(0,.62,0);fig.add(pelvis);
+  const neck=seg2(.05,.048,skinM);place(neck,V(0,1.14,.02),V(0,1.28,.03));fig.add(neck);
+  const collar=seg2(.058,.055,whiteM);place(collar,V(0,1.13,.02),V(0,1.19,.025));fig.add(collar);
+
+  /* head */
+  const head=new T.Group();head.position.set(0,1.27,.03);fig.add(head);
+  const skull=ball(.115,skinM);skull.scale.set(.88,1.1,.98);skull.position.set(0,.12,0);head.add(skull);
+  const jaw=ball(.09,skinM);jaw.scale.set(.85,.75,.95);jaw.position.set(0,.06,.02);head.add(jaw);
+  [-1,1].forEach(s=>{const e=ball(.025,skinM);e.scale.set(.45,1,.75);e.position.set(s*.1,.11,-.005);head.add(e)});
+  const cap=new T.Mesh(new T.SphereGeometry(.122,36,20,0,Math.PI*2,0,Math.PI*.5),hairR);
+  cap.position.set(0,.135,-.01);cap.rotation.x=-.25;cap.castShadow=true;head.add(cap);
+  const top=ball(.1,hairR);top.scale.set(1.04,.5,1.08);top.position.set(0,.212,0);head.add(top);
+  const backHair=ball(.1,hairR);backHair.scale.set(.95,1,.9);backHair.position.set(0,.15,-.045);head.add(backHair);
+  const eyes=[];
+  [-1,1].forEach(s=>{const g=new T.Group();g.position.set(s*.038,.13,.098);
+    const w=ball(.016,M(0xf3eee8,.3));w.scale.set(1.25,.75,.45);g.add(w);
+    const ir=ball(.0105,M(0x3b2416,.2));ir.position.z=.0075;g.add(ir);
+    const hl=ball(.0025,new T.MeshBasicMaterial({color:0xffffff}));hl.position.set(.003,.003,.0155);g.add(hl);
+    const lid=ball(.017,skinM);lid.scale.set(1.3,.35,.5);lid.position.set(0,.009,.001);g.add(lid);
+    head.add(g);eyes.push(g);
+    const br=new T.Mesh(new T.BoxGeometry(.044,.008,.01),hairR);br.position.set(s*.04,.158,.1);br.rotation.z=-s*.12;head.add(br)});
+  const nose=ball(.018,skinM);nose.scale.set(.75,1.3,1.2);nose.position.set(0,.105,.112);head.add(nose);
+  const nos=ball(.014,skinM);nos.scale.set(1.35,.8,1);nos.position.set(0,.088,.114);head.add(nos);
+  const upLip=ball(.02,lipM);upLip.scale.set(1.6,.42,.6);upLip.position.set(0,.067,.1);head.add(upLip);
+  const loLip=ball(.02,lipM);loLip.scale.set(1.45,.52,.6);loLip.position.set(0,.057,.099);head.add(loLip);
+
+  /* legs: tapered trousers, dress shoes */
+  const hipR=V(.09,.62,-.02),kneeR=V(.09,.07,-.08),ankR=V(.09,.08,-.52);
+  const hipL=V(-.09,.62,.03),kneeL=V(-.09,.56,.44),ankL=V(-.09,.09,.47);
+  [[hipR,kneeR,.085,.062],[kneeR,ankR,.06,.045],[hipL,kneeL,.085,.062],[kneeL,ankL,.06,.045]]
+    .forEach(([a,b,ra,rb])=>{const s=seg2(ra,rb,suitM);place(s,a,b);fig.add(s)});
+  [kneeR,kneeL].forEach(k=>{const b=ball(.062,suitM);b.position.copy(k);fig.add(b)});
+  const shoeL=ball(.06,soleM);shoeL.scale.set(.8,.55,1.9);shoeL.position.set(-.09,.04,.53);fig.add(shoeL);
+  const shoeR=ball(.06,soleM);shoeR.scale.set(.8,.55,1.8);shoeR.position.set(.09,.05,-.6);shoeR.rotation.x=.5;fig.add(shoeR);
+
+  /* arms: tapered sleeves with shirt cuffs and hands */
+  const shL=V(-.2,1.12,0),shR=V(.2,1.12,0);
+  [shL,shR].forEach(s=>{const b=ball(.062,suitM);b.position.copy(s);fig.add(b)});
+  const elL=V(-.24,.86,.12),haL=V(-.13,.62,.38);
+  const upL=seg2(.055,.046,suitM),foL=seg2(.046,.038,suitM);place(upL,shL,elL);place(foL,elL,haL);fig.add(upL,foL);
+  const jL=ball(.046,suitM);jL.position.copy(elL);fig.add(jL);
+  const hdL=hand();orient(hdL,elL,haL);fig.add(hdL);
+  const upR=seg2(.055,.046,suitM),foR=seg2(.046,.038,suitM),jR=ball(.046,suitM),hdR=hand();
+  fig.add(upR,foR,jR,hdR);
+  const elA=V(.27,.85,.1),haA=V(.15,.92,.3),elB=V(.38,.94,.24),haB=V(.52,.9,.5);
+  const elR=new T.Vector3(),haR=new T.Vector3();
+  function poseArm(s){
+    elR.lerpVectors(elA,elB,s);haR.lerpVectors(haA,haB,s);
+    place(upR,shR,elR);place(foR,elR,haR);jR.position.copy(elR);orient(hdR,elR,haR);
+    const d=haR.clone().sub(elR).normalize();
+    bq.position.copy(haR).addScaledVector(d,.075);   // stems sit in his fingers
+  }
+
+  /* bouquet */
+  const bq=new T.Group();fig.add(bq);
+  const paper=new T.Mesh(new T.ConeGeometry(.2,.5,32,1,true),new T.MeshStandardMaterial({color:0xffd0e2,roughness:.7,side:T.DoubleSide}));
+  paper.rotation.x=Math.PI;paper.position.y=.25;paper.castShadow=true;bq.add(paper);
+  const rib=new T.Mesh(new T.TorusGeometry(.085,.016,10,28),tieM);rib.rotation.x=Math.PI/2;rib.position.y=.2;bq.add(rib);
+  [-1,1].forEach(s=>{const l=ball(.04,tieM);l.scale.set(1.5,.7,.7);l.position.set(s*.07,.17,.09);l.rotation.z=s*.4;bq.add(l)});
+  function makeRose(){
+    const g=new T.Group(),deep=M(0xe8467f,.45),mid=M(0xff6ea1,.45),light=M(0xff9fc4,.4);
+    const core=ball(.05,deep);core.scale.set(1,1.15,1);g.add(core);
+    for(let i=0;i<5;i++){const a=i/5*6.283,p=ball(.062,mid);p.scale.set(1,.75,.45);
+      p.position.set(Math.cos(a)*.05,-.005,Math.sin(a)*.05);p.rotation.y=-a-Math.PI/2;g.add(p)}
+    for(let i=0;i<7;i++){const a=i/7*6.283+.3,p=ball(.078,light);p.scale.set(1,.65,.4);
+      p.position.set(Math.cos(a)*.085,-.03,Math.sin(a)*.085);p.rotation.y=-a-Math.PI/2;p.rotation.x=.25;g.add(p)}
+    return g;
+  }
+  const roses=[];
+  [[0,.64,0,1.2],[.13,.57,.05,1],[-.13,.57,.04,1],[.06,.56,-.12,1],[-.06,.56,-.11,.95],[0,.5,.16,.9],[.17,.5,-.06,.85],[-.17,.5,-.05,.85]]
+    .forEach(([x,y,z,s])=>{const r=makeRose();r.position.set(x,y,z);r.scale.setScalar(s);r.userData.s=s;bq.add(r);roses.push(r)});
+  const leafM=M(0x3fa968,.7);
+  for(let i=0;i<7;i++){const a=i/7*6.283,l=ball(.07,leafM);l.scale.set(1,.2,.55);
+    l.position.set(Math.cos(a)*.24,.47,Math.sin(a)*.24);l.rotation.y=-a;l.rotation.z=.4;l.castShadow=false;bq.add(l)}
+  for(let i=0;i<12;i++){const a=Math.random()*6.28,b=ball(.014,new T.MeshBasicMaterial({color:0xffffff}));
+    b.position.set(Math.cos(a)*.2,.5+Math.random()*.16,Math.sin(a)*.2);b.castShadow=false;bq.add(b)}
+  const hit=new T.Mesh(new T.SphereGeometry(.42,12,12),new T.MeshBasicMaterial({visible:false}));hit.position.y=.45;bq.add(hit);
+  bq.rotation.set(.9,0,-.15);
+  const ring=new T.Mesh(new T.RingGeometry(.25,.26,64),new T.MeshBasicMaterial({color:0xff6ea1,transparent:true,opacity:.8,side:T.DoubleSide,depthWrite:false}));
+  scene.add(ring);
+
+  /* magical sparkles */
+  const N=40,pos=new Float32Array(N*3),spd=[];
+  for(let i=0;i<N;i++){pos[i*3]=(Math.random()-.5)*4;pos[i*3+1]=Math.random()*2.8;pos[i*3+2]=(Math.random()-.5)*3;spd.push(.1+Math.random()*.25)}
+  const sg=new T.BufferGeometry();sg.setAttribute('position',new T.BufferAttribute(pos,3));
+  const tc=document.createElement('canvas');tc.width=tc.height=64;const tx=tc.getContext('2d');
+  const gr=tx.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'#fff');gr.addColorStop(.4,'#ffd27acc');gr.addColorStop(1,'#ffd27a00');
+  tx.fillStyle=gr;tx.fillRect(0,0,64,64);
+  const sparks=new T.Points(sg,new T.PointsMaterial({size:.07,map:new T.CanvasTexture(tc),transparent:true,depthWrite:false}));
+  scene.add(sparks);
+
+  /* click / hover on the bouquet */
+  const ray=new T.Raycaster(),ndc=new T.Vector2();
+  function hitTest(e){const r=cvs.getBoundingClientRect();
+    ndc.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
+    ray.setFromCamera(ndc,cam);return ray.intersectObject(bq,true).length>0}
+  cvs.addEventListener('pointerdown',e=>{if(hitTest(e))bloom()});
+  cvs.addEventListener('pointermove',e=>{cvs.style.cursor=hitTest(e)?'pointer':'default'});
+
+  /* animation */
+  const ease=t=>{t=Math.max(0,Math.min(1,t));const c=1.70158;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+  const t0=performance.now();let nextBlink=2500,blinkT=-1,camA=0,camY=1.2;
+  const tmp=new T.Vector3();
+  (function frame(now){
+    requestAnimationFrame(frame);
+    if(!$('s0').classList.contains('on'))return;
+    const t=now-t0,sec=t/1000;
+    /* pop in */
+    /* gently settles down onto one knee */
+    const sIn=Math.min(1,t/1300),eo=1-Math.pow(1-sIn,3);
+    if(!bloomed)fig.position.y=.2*(1-eo);
+    /* arm reaches out */
+    const reach=ease((t-1200)/1100);poseArm(reach);
+    /* idle motion */
+    torso.scale.y=1+Math.sin(sec*1.9)*.012;
+    bq.rotation.z=-.45+Math.sin(sec*1.3)*.04;
+    bq.rotation.x=.5+Math.sin(sec*1.1)*.03;
+    /* head follows the viewer's pointer / finger */
+    head.rotation.y+=((px*.5)-head.rotation.y)*.08;
+    head.rotation.x+=((py*.25+.05)-head.rotation.x)*.08;
+    head.rotation.z=Math.sin(sec*1.2)*.03;
+    /* blinking */
+    if(t>nextBlink&&blinkT<0){blinkT=t;nextBlink=t+2500+Math.random()*2500}
+    if(blinkT>=0){const k=(t-blinkT)/160;const sy=k<1?1-Math.sin(k*Math.PI)*.92:1;eyes.forEach(e=>e.scale.y=sy);if(k>=1)blinkT=-1}
+    /* celebration */
+    let pulse=1;
+    if(bloomed){const k=(now-bloomT)/1000;fig.position.y=Math.abs(Math.sin(k*4))*.06*Math.max(0,1-k/2.2);
+      pulse=1+.25*Math.min(1,k*2);roses.forEach((r,i)=>r.scale.setScalar(r.userData.s*(1+.28*Math.min(1,Math.max(0,k*2.5-i*.15)))))}
+    bq.scale.setScalar(.55*pulse);
+    /* ring: glowing halo that asks to be tapped */
+    bq.localToWorld(tmp.set(0,.45,0));ring.position.copy(tmp);ring.lookAt(cam.position);
+    /* animated finger pointing at the roses until she taps */
+    const th=$('tapHint'),q=tmp.clone().project(cam);
+    th.style.left=((q.x*.5+.5)*host.clientWidth)+'px';th.style.top=((-q.y*.5+.5)*host.clientHeight)+'px';
+    th.style.display=(reach>.95&&!bloomed)?'block':'none';
+    const rp=(sec%1.8)/1.8;ring.scale.setScalar(.85+rp*.5);ring.material.opacity=(bloomed?0:.85*(1-rp))*(reach>.9?1:0);
+    /* sparkles drift upward */
+    const p=sg.attributes.position;for(let i=0;i<N;i++){let y=p.array[i*3+1]+spd[i]*.016;if(y>2.8)y=0;p.array[i*3+1]=y}
+    p.needsUpdate=true;
+    /* camera orbit follows pointer for the 3D parallax */
+    camA+=((px*.55+Math.sin(sec*.5)*.12)-camA)*.05;camY+=((1.15-py*.35)-camY)*.05;
+    cam.position.set(Math.sin(camA)*3.7,camY,Math.cos(camA)*3.7);cam.lookAt(.1,.78,0);
+    R.render(scene,cam);
+  })(performance.now());
+}
+</script>
+</body>
+</html>
