@@ -474,23 +474,31 @@ async function startMic(){
   micOK=true;
   try{await ctx2.resume()}catch(e){}
   const src=ctx2.createMediaStreamSource(stream);
-  analyser=ctx2.createAnalyser();analyser.fftSize=1024;src.connect(analyser);
-  const buf=new Uint8Array(analyser.fftSize);micOn=true;calib=[];power=0;
+  analyser=ctx2.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.3;src.connect(analyser);
+  const buf=new Uint8Array(analyser.fftSize),fbuf=new Uint8Array(analyser.frequencyBinCount);
+  // bins below ~1 kHz: blowing on a phone mic makes a strong low "whoosh" there
+  const lowBins=Math.max(4,Math.round(1000/(ctx2.sampleRate/analyser.fftSize)));
+  let calibLF=[],baseLF=0;
+  micOn=true;calib=[];power=0;
   $('micBtn').style.display='none';
   $('cakeHint').textContent=`Now blow, ${CONFIG.name} 💨`;
   let last=performance.now();
   (function tick(){
     if(!micOn)return;raf=requestAnimationFrame(tick);
-    const now=performance.now(),dt=(now-last)/1000;last=now;
+    const now=performance.now(),dt=Math.min(.1,(now-last)/1000);last=now;
     analyser.getByteTimeDomainData(buf);
     let s=0;for(let i=0;i<buf.length;i++){const v=(buf[i]-128)/128;s+=v*v}
     const rms=Math.sqrt(s/buf.length);
-    if(calib.length<30){calib.push(rms);base=calib.reduce((a,b)=>a+b,0)/calib.length;return}
-    const thr=Math.max(0.045,base*2.6);
-    $('blowHint').classList.toggle('active',rms>thr);
-    if(rms>thr){power+=dt;lean(rms)}else{power=Math.max(0,power-dt*1.5);lean(0)}
-    // one good puff blows out ALL the candles in a quick ripple
-    if(power>0.25&&lit>0){
+    analyser.getByteFrequencyData(fbuf);
+    let lf=0;for(let i=1;i<lowBins;i++)lf+=fbuf[i];lf=lf/(lowBins-1)/255;
+    // learn the room's quiet level from the QUIETEST moments (so blowing early can't spoil it)
+    if(calib.length<12){calib.push(rms);calibLF.push(lf);
+      base=Math.min(.02,Math.min(...calib));baseLF=Math.min(.45,Math.min(...calibLF));return}
+    const blowing=rms>Math.max(.016,base*2)||lf>Math.max(.5,baseLF+.2);
+    $('blowHint').classList.toggle('active',blowing);
+    if(blowing){power+=dt;lean(Math.max(rms*2,(lf-baseLF)*.4))}else{power=Math.max(0,power-dt*.6);lean(0)}
+    // a short puff (~0.15s) blows out ALL the candles in a quick ripple
+    if(power>0.15&&lit>0){
       candles.filter(c=>!c.out).forEach((c,i)=>setTimeout(()=>extinguish(c),i*90));
       power=0;micOn=false;
     }
